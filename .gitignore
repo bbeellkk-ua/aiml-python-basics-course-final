@@ -1,0 +1,6 @@
+*.pkl
+venv/
+.env/
+build/
+__pycache__/
+*egg-info/
