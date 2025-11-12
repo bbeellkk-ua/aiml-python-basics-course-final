@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import wraps
 
 from address_book import Record, AddressBook
+from note_book import NoteBook
 
 
 def input_error(func):
@@ -170,3 +171,48 @@ def show_address(args, book: AddressBook):
         return "No address set."
 
     return f"{name}: {record.address}"
+
+@input_error
+def add_note(args, book: NoteBook):
+    if len(args) < 1:
+        raise IndexError("Usage: add-note [text]")
+    text = " ".join(args).strip()
+    if not text:
+        raise ValueError("Note text cannot be empty.")
+    note = book.add_note(text)
+    return f"Note added with id {note.id.value}."
+
+
+@input_error
+def show_notes(book: NoteBook):
+    notes = book.get_notes()
+    if not notes:
+        return "No notes found."
+    return "\n".join(str(n) for n in notes)
+
+
+@input_error
+def edit_note(args, book: NoteBook):
+    if len(args) < 2:
+        raise IndexError("Usage: edit-note [id] [new text]")
+    try:
+        note_id = int(args[0])
+    except ValueError:
+        raise ValueError("Note id must be an integer.")
+    new_text = " ".join(args[1:]).strip()
+    if not new_text:
+        raise ValueError("Note cannot be empty.")
+    book.edit_note(note_id, new_text)
+    return "Note updated."
+
+
+@input_error
+def delete_note(args, book: NoteBook):
+    if len(args) < 1:
+        raise IndexError("Usage: delete-note [id]")
+    try:
+        note_id = int(args[0])
+    except ValueError:
+        raise ValueError("Note id must be an integer.")
+    book.delete_note(note_id)
+    return "Note deleted."
