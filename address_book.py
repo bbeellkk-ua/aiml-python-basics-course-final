@@ -1,4 +1,4 @@
-from fields import Name, Phone, Birthday
+from fields import Name, Phone, Birthday, Address
 from collections import UserDict
 from datetime import date, datetime, timedelta
 import calendar
@@ -9,11 +9,13 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        self.address = None
 
     def __str__(self):
         phones_str = "; ".join(p.value for p in self.phones) if self.phones else "no phones"
         birthday_str = str(self.birthday) if self.birthday else "no data"
-        return f"Contact: {self.name.value}, phones: {phones_str}, birthday: {birthday_str}"
+        address_str = str(self.address) if self.address else "no address"
+        return f"Contact: {self.name.value}, phones: {phones_str}, birthday: {birthday_str}, address: {address_str}"
 
     def add_phone(self, phone_number: str):
         phone = self.find_phone(phone_number)
@@ -39,6 +41,9 @@ class Record:
 
     def add_birthday(self, birthday_str: str):
         self.birthday = Birthday(birthday_str)
+
+    def add_address(self, address_str: str):
+        self.address = Address(address_str)
 
 
 class AddressBook(UserDict):

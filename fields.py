@@ -52,3 +52,7 @@ class Birthday(Field):
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
+
+
+class Address(Field):
+    pass
