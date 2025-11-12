@@ -8,6 +8,8 @@ from handlers import (
     add_birthday,
     show_birthday,
     birthdays,
+    add_address,
+    show_address,
 )
 
 
@@ -69,6 +71,14 @@ class Assistant:
             "      Show which contacts have a birthday coming up in the next N days.\n"
             "      Example: birthdays 7\n"
             "\n"
+            "  add-address <name> <address>\n"
+            "      Add or update a contact's address.\n"
+            "      Example: add-birthday John US, CA, Los Angeles, Tarasa Shevchecnko, 10, 25\n"
+            "\n"
+            "  show-address <name>\n"
+            "      Show the birthday of a contact.\n"
+            "      Example: show-birthday John\n"
+            "\n"
             "  help\n"
             "      Show this help message.\n"
             "\n"
@@ -126,6 +136,12 @@ class Assistant:
 
             elif command == "birthdays":
                 print(birthdays(args, self.book))
+
+            elif command == "add-address":
+                print(add_address(args, self.book))
+
+            elif command == "show-address":
+                print(show_address(args, self.book))
 
             else:
                 self.invalid_input()

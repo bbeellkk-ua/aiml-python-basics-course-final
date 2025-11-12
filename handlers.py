@@ -138,3 +138,35 @@ def birthdays(args, book: AddressBook):
         lines.append(f"{day}: {names}")
 
     return "\n".join(lines)
+
+
+@input_error
+def add_address(args, book: AddressBook):
+    if len(args) < 2:
+        raise IndexError("Usage: add-address [name] [address]")
+
+    name, *address_list = args
+
+    record = book.find(name)
+    if record is None:
+        raise KeyError("Contact not found.")
+
+    record.add_address(" ".join(address_list))
+    return "Address set."
+
+
+@input_error
+def show_address(args, book: AddressBook):
+    if len(args) < 1:
+        raise IndexError("Usage: show-address [name]")
+
+    name, *_ = args
+
+    record = book.find(name)
+    if record is None:
+        raise KeyError("Contact not found.")
+
+    if record.address is None:
+        return "No address set."
+
+    return f"{name}: {record.address}"
