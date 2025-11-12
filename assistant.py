@@ -18,6 +18,11 @@ from handlers import (
     delete_note,
 )
 
+try:
+    import readline  # stdlib; provides tab-completion on Unix/macOS
+except Exception:
+    readline = None
+
 
 class Assistant:
     def __init__(self, filename: str = "assistant.pkl"):
@@ -123,9 +128,98 @@ class Assistant:
     def invalid_input():
         print("Invalid command. Type 'help' to see available commands.")
 
+    @staticmethod
+    def _match_candidates(options, prefix: str):
+        if not prefix:
+            return list(options)
+        low = prefix.lower()
+        return [o for o in options if o.lower().startswith(low)]
+
+    def _setup_autocomplete(self):
+        if readline is None:
+            return
+
+        # Known commands and those whose first argument is a contact name
+        commands = [
+            "hello",
+            "add",
+            "change",
+            "phone",
+            "all",
+            "add-birthday",
+            "show-birthday",
+            "birthdays",
+            "add-address",
+            "show-address",
+            "help",
+            "exit",
+            "close",
+        ]
+        name_first_cmds = {
+            "add",
+            "change",
+            "phone",
+            "add-birthday",
+            "show-birthday",
+            "add-address",
+            "show-address",
+        }
+
+        def completer(text, state):
+            try:
+                buf = readline.get_line_buffer()
+            except Exception:
+                buf = ""
+            # Detect tokenization state
+            is_new_token = buf.endswith(" ")
+            tokens = buf.strip().split()
+
+            # Determine which candidates to offer
+            if not tokens or (len(tokens) == 0):
+                candidates = self._match_candidates(commands, text)
+            else:
+                token_index = len(tokens) if is_new_token else max(len(tokens) - 1, 0)
+
+                if token_index == 0:
+                    # Completing the command name
+                    # Use the full first token as prefix to avoid delimiter issues (e.g., hyphen)
+                    cmd_prefix = tokens[0] if not is_new_token else ""
+                    candidates = self._match_candidates(commands, cmd_prefix)
+                elif tokens and tokens[0].lower() in name_first_cmds and token_index == 1:
+                    # Completing the first argument (contact name)
+                    names = list(self.book.data.keys()) if self.book else []
+                    candidates = self._match_candidates(names, text)
+                else:
+                    candidates = []
+
+            try:
+                return sorted(candidates)[state]
+            except IndexError:
+                return None
+
+        try:
+            # Bind both GNU readline and libedit (macOS) styles
+            try:
+                readline.set_completer_delims(" \t")
+            except Exception:
+                pass
+            readline.set_completer(completer)
+            try:
+                readline.parse_and_bind("tab: complete")
+            except Exception:
+                pass
+            try:
+                readline.parse_and_bind("bind ^I rl_complete")
+            except Exception:
+                pass
+        except Exception:
+            # Fail silently if readline is unavailable or misconfigured
+            pass
+
     def run(self):
         print("Welcome to the assistant bot!")
         print("Type 'help' to see available commands.")
+        self._setup_autocomplete()
 
         while True:
             try:
