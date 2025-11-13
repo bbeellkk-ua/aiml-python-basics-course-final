@@ -22,5 +22,5 @@ pip install -e .
 ## CLI Usage
 After installation, run the CLI:
 ```bash
-address-book
+bot
 ```

@@ -19,7 +19,7 @@ classifiers = [
 ]
 
 [project.scripts]
-address-book = "main:main"
+bot = "main:main"
 
 [tool.setuptools]
-py-modules = ["main", "assistant", "address_book", "fields", "handlers"]
+py-modules = ["main", "assistant", "address_book", "fields", "handlers", "note_book"]
