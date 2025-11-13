@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 from address_book import AddressBook
 from note_book import NoteBook
 from handlers import (
@@ -20,13 +21,18 @@ from handlers import (
 
 class Assistant:
     def __init__(self, filename: str = "assistant.pkl"):
-        self.filename = filename
+        # Store state under ~/.bot
+        self.state_dir = Path.home() / ".bot"
+        self.state_dir.mkdir(parents=True, exist_ok=True)
+        # Always store state file inside ~/.bot, using the base name to avoid directory traversal
+        self.filename = Path(filename).name
+        self.filepath = self.state_dir / self.filename
         self.address_book = None
         self.note_book = None
 
     def _load_data(self):
         try:
-            with open(self.filename, "rb") as f:
+            with open(self.filepath, "rb") as f:
                 payload = pickle.load(f)
                 self.address_book = payload.get("address_book") or AddressBook()
                 self.note_book = payload.get("note_book") or NoteBook()
@@ -39,7 +45,7 @@ class Assistant:
             "address_book": self.address_book,
             "note_book": self.note_book,
         }
-        with open(self.filename, "wb") as f:
+        with open(self.filepath, "wb") as f:
             pickle.dump(payload, f)
 
     def __enter__(self):
