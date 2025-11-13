@@ -15,14 +15,18 @@ from handlers import (
     show_notes,
     edit_note,
     delete_note,
+    set_birthdays_days,
 )
 
 
 class Assistant:
+    DEFAULT_BIRTHDAYS_DAYS = 7
+
     def __init__(self, filename: str = "assistant.pkl"):
         self.filename = filename
         self.address_book = None
         self.note_book = None
+        self.birthdays_days = self.DEFAULT_BIRTHDAYS_DAYS
 
     def _load_data(self):
         try:
@@ -30,14 +34,17 @@ class Assistant:
                 payload = pickle.load(f)
                 self.address_book = payload.get("address_book") or AddressBook()
                 self.note_book = payload.get("note_book") or NoteBook()
+                self.birthdays_days = payload.get("birthdays_days", self.DEFAULT_BIRTHDAYS_DAYS)
         except FileNotFoundError:
             self.address_book = AddressBook()
             self.note_book = NoteBook()
+            self.birthdays_days = self.DEFAULT_BIRTHDAYS_DAYS
 
     def _save_data(self):
         payload = {
             "address_book": self.address_book,
             "note_book": self.note_book,
+            "birthdays_days": self.birthdays_days,
         }
         with open(self.filename, "wb") as f:
             pickle.dump(payload, f)
@@ -80,9 +87,15 @@ class Assistant:
             "      Show the birthday of a contact.\n"
             "      Example: show-birthday John\n"
             "\n"
-            "  birthdays <days>\n"
+            "  birthdays [days]\n"
             "      Show which contacts have a birthday coming up in the next N days.\n"
+            "      If days is not specified, uses the configured default.\n"
             "      Example: birthdays 7\n"
+            "      Example: birthdays (uses configured default)\n"
+            "\n"
+            "  set-birthdays-days <days>\n"
+            "      Set the default number of days for the birthdays command.\n"
+            "      Example: set-birthdays-days 14\n"
             "\n"
             "  add-address <name> <address>\n"
             "      Add or update a contact's address.\n"
@@ -162,7 +175,10 @@ class Assistant:
                 print(show_birthday(args, self.address_book))
 
             elif command == "birthdays":
-                print(birthdays(args, self.address_book))
+                print(birthdays(args, self.address_book, self.birthdays_days))
+
+            elif command == "set-birthdays-days":
+                print(set_birthdays_days(args, self))
 
             elif command == "add-address":
                 print(add_address(args, self.address_book))
