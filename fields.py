@@ -56,3 +56,34 @@ class Birthday(Field):
 
 class Address(Field):
     pass
+
+
+class NoteID(Field):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        try:
+            iv = int(value)
+        except (TypeError, ValueError):
+            raise ValueError("Note ID must be an integer.")
+        if iv < 1:
+            raise ValueError("Note ID must be >= 1.")
+        self._value = iv
+
+
+class NoteText(Field):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: str):
+        if value is None:
+            raise ValueError("Note text cannot be empty.")
+        s = str(value).strip()
+        if not s:
+            raise ValueError("Note text cannot be empty.")
+        self._value = s
