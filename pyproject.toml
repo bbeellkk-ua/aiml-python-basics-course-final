@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aiml-python-basics-course-final"
+version = "0.1.0"
+description = "Address book CLI assistant bot."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Project Authors" }]
+keywords = ["address book", "cli", "assistant", "contacts"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+    "Topic :: Utilities"
+]
+
+[project.scripts]
+bot = "main:main"
+
+[tool.setuptools]
+py-modules = ["main", "assistant", "address_book", "fields", "handlers", "note_book"]

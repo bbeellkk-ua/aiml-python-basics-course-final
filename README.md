@@ -11,3 +11,16 @@
 ```bash
 python3 main.py
 ```
+
+## Installation via pip
+```bash
+pip install .
+# or for development (editable install):
+pip install -e .
+```
+
+## CLI Usage
+After installation, run the CLI:
+```bash
+bot
+```
