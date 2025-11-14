@@ -187,7 +187,7 @@ class Assistant:
                     candidates = self._match_candidates(commands, cmd_prefix)
                 elif tokens and tokens[0].lower() in name_first_cmds and token_index == 1:
                     # Completing the first argument (contact name)
-                    names = list(self.book.data.keys()) if self.book else []
+                    names = list(self.address_book.data.keys()) if self.address_book else []
                     candidates = self._match_candidates(names, text)
                 else:
                     candidates = []
