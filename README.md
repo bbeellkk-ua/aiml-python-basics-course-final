@@ -12,7 +12,6 @@
 python3 main.py
 ```
 
-<<<<<<< HEAD
 ## Installation via pip
 ```bash
 pip install .
@@ -25,7 +24,7 @@ After installation, run the CLI:
 ```bash
 bot
 ```
-=======
+
 ## Autocompletion
 Tab-completion is available for commands and for the first argument when it expects a contact name.
 
@@ -37,4 +36,3 @@ Usage:
 - Start the assistant (either via "python3 main.py" or the installed CLI "address-book").
 - At the prompt, type part of a command (e.g., "ad") and press Tab to complete ("add").
 - For commands where the first argument is a contact name (e.g., "phone", "add-birthday"), type the beginning of a name and press Tab to complete from existing contacts.
->>>>>>> dfcd4c3 (Add autocomplete)
