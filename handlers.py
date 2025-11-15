@@ -231,6 +231,62 @@ def delete_note(args, book: NoteBook):
 
 
 @input_error
+def tag_note(args, book: NoteBook):
+    if len(args) < 2:
+        raise IndexError("Usage: tag-note [id] [tag1] [tag2] ...")
+    try:
+        note_id = int(args[0])
+    except ValueError:
+        raise ValueError("Note id must be an integer.")
+
+    tags = [t.strip() for t in args[1:] if t.strip()]
+    if not tags:
+        raise ValueError("At least one tag is required.")
+    book.add_tags(note_id, tags)
+    return "Tags added."
+
+
+@input_error
+def untag_note(args, book: NoteBook):
+    if len(args) < 2:
+        raise IndexError("Usage: untag-note [id] [tag1] [tag2] ...")
+    try:
+        note_id = int(args[0])
+    except ValueError:
+        raise ValueError("Note id must be an integer.")
+
+    tags = [t.strip() for t in args[1:] if t.strip()]
+    if not tags:
+        raise ValueError("At least one tag is required.")
+    book.remove_tags(note_id, tags)
+    return "Tags removed."
+
+
+@input_error
+def find_notes(args, book: NoteBook):
+    if len(args) < 1:
+        raise IndexError("Usage: find-notes [tag1] [tag2] ...")
+    tags = [t.strip() for t in args if t.strip()]
+    if not tags:
+        raise ValueError("At least one tag is required.")
+
+    notes = book.search_by_tags(tags)
+    if not notes:
+        return "No notes found for given tags."
+    return "\n".join(str(n) for n in notes)
+
+
+@input_error
+def sort_notes_by_tags(args, book: NoteBook):
+    if args:
+        raise ValueError("Usage: sort-notes-by-tags")
+    notes = book.sort_by_tags()
+    if not notes:
+        return "No notes found."
+    return "\n".join(str(n) for n in notes)
+
+
+@input_error
 def set_birthdays_days(args, assistant):
     if len(args) < 1:
         raise IndexError("Usage: set-birthdays-days [days]")

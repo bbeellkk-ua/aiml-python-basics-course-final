@@ -16,6 +16,10 @@ from handlers import (
     show_notes,
     edit_note,
     delete_note,
+    tag_note,
+    untag_note,
+    find_notes,
+    sort_notes_by_tags,
     set_birthdays_days,
 )
 
@@ -130,6 +134,22 @@ class Assistant:
             "  delete-note <id>\n"
             "      Delete a note by its id.\n"
             "      Example: delete-note 2\n"
+            "\n"
+            "  tag-note <id> <tag1> [tag2] ...\n"
+            "      Add one or more tags to a note.\n"
+            "      Example: tag-note 1 shopping home\n"
+            "\n"
+            "  untag-note <id> <tag1> [tag2] ...\n"
+            "      Remove one or more tags from a note.\n"
+            "      Example: untag-note 1 home\n"
+            "\n"
+            "  find-notes <tag1> [tag2] ...\n"
+            "      Find notes which contain at least one of the given tags.\n"
+            "      Example: find-notes shopping home\n"
+            "\n"
+            "  sort-notes-by-tags\n"
+            "      Show all notes sorted by tags (alphabetically).\n"
+            "\n"            
             "  help\n"
             "      Show this help message.\n"
             "\n"
@@ -164,6 +184,14 @@ class Assistant:
             "birthdays",
             "add-address",
             "show-address",
+            "add-note",
+            "notes",
+            "edit-note",
+            "delete-note",
+            "tag-note",
+            "untag-note",
+            "find-notes",
+            "sort-notes-by-tags",
             "help",
             "exit",
             "close",
@@ -297,6 +325,18 @@ class Assistant:
 
             elif command == "delete-note":
                 print(delete_note(args, self.note_book))
+
+            elif command == "tag-note":
+                print(tag_note(args, self.note_book))
+
+            elif command == "untag-note":
+                print(untag_note(args, self.note_book))
+
+            elif command == "find-notes":
+                print(find_notes(args, self.note_book))
+
+            elif command == "sort-notes-by-tags":
+                print(sort_notes_by_tags(args, self.note_book))
 
             else:
                 self.invalid_input()

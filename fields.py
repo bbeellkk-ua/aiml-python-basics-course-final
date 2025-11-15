@@ -87,3 +87,17 @@ class NoteText(Field):
         if not s:
             raise ValueError("Note text cannot be empty.")
         self._value = s
+
+class NoteTag(Field):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: str):
+        if value is None:
+            raise ValueError("Tag cannot be empty.")
+        s = str(value).strip()
+        if not s:
+            raise ValueError("Tag cannot be empty.")
+        self._value = s.lower()
