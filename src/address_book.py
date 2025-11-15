@@ -1,6 +1,6 @@
 from fields import Name, Phone, Birthday, Address
 from collections import UserDict
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 import calendar
 
 
@@ -12,10 +12,14 @@ class Record:
         self.address = None
 
     def __str__(self):
-        phones_str = "; ".join(p.value for p in self.phones) if self.phones else "no phones"
+        phones_str = ("; ".join(p.value for p in self.phones)
+                      if self.phones else "no phones")
         birthday_str = str(self.birthday) if self.birthday else "no data"
         address_str = str(self.address) if self.address else "no address"
-        return f"Contact: {self.name.value}, phones: {phones_str}, birthday: {birthday_str}, address: {address_str}"
+        return (
+            f"Contact: {self.name.value}, phones: {phones_str}, "
+            f"birthday: {birthday_str}, address: {address_str}"
+        )
 
     def add_phone(self, phone_number: str):
         phone = self.find_phone(phone_number)
@@ -31,7 +35,9 @@ class Record:
         self.phones.remove(phone)
 
     def find_phone(self, phone_number: str):
-        return next((phone for phone in self.phones if phone.value == phone_number), None)
+        return next(
+            (phone for phone in self.phones if phone.value == phone_number),
+            None)
 
     def edit_phone(self, phone_number: str, new_phone_number: str):
         phone = self.find_phone(phone_number)
@@ -81,17 +87,29 @@ class AddressBook(UserDict):
 
             born_date = record.birthday.value
 
-            birthday_this_year = clamp_to_month_end(today.year, born_date.month, born_date.day)
-            next_birthday = birthday_this_year if birthday_this_year >= today else clamp_to_month_end(today.year + 1, born_date.month, born_date.day)
+            birthday_this_year = clamp_to_month_end(
+                today.year, born_date.month, born_date.day
+            )
+            if birthday_this_year >= today:
+                next_birthday = birthday_this_year
+            else:
+                next_birthday = clamp_to_month_end(
+                    today.year + 1, born_date.month, born_date.day
+                )
 
             days_remaining = (next_birthday - today).days
 
             if 0 <= days_remaining < days:
                 congratulation_date = shift_to_workday(next_birthday)
-                upcoming_birthdays.append({
-                    "name": record.name.value,
-                    "congratulation_date": congratulation_date
-                })
+                upcoming_birthdays.append(
+                    {
+                        "name": record.name.value,
+                        "congratulation_date": congratulation_date,
+                    }
+                )
 
-        upcoming_birthdays.sort(key=lambda x: (x["congratulation_date"], x["name"]))
+        upcoming_birthdays.sort(
+            key=lambda x: (
+                x["congratulation_date"],
+                x["name"]))
         return upcoming_birthdays

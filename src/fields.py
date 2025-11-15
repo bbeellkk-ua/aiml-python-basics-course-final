@@ -36,7 +36,6 @@ class Phone(Field):
         self._value = value
 
 
-
 class Birthday(Field):
     @property
     def value(self):
@@ -87,6 +86,7 @@ class NoteText(Field):
         if not s:
             raise ValueError("Note text cannot be empty.")
         self._value = s
+
 
 class NoteTag(Field):
     @property

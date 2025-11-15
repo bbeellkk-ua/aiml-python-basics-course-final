@@ -184,6 +184,7 @@ def show_address(args, book: AddressBook):
 
     return f"{name}: {record.address}"
 
+
 @input_error
 def add_note(args, book: NoteBook):
     if len(args) < 1:
