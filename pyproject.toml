@@ -22,4 +22,5 @@ classifiers = [
 bot = "main:main"
 
 [tool.setuptools]
+package-dir = { "" = "src" }
 py-modules = ["main", "assistant", "address_book", "fields", "handlers", "note_book"]
