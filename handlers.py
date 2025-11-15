@@ -119,11 +119,23 @@ def show_birthday(args, book: AddressBook):
 
 
 @input_error
-def birthdays(args, book: AddressBook):
-    upcoming = book.get_upcoming_birthdays()
+def birthdays(args, book: AddressBook, default_days: int = 7):
+    if args and len(args) > 0:
+        try:
+            days = int(args[0])
+            if days < 1:
+                raise ValueError("Number of days must be positive.")
+        except ValueError as e:
+            if "positive" in str(e):
+                raise
+            raise ValueError("Number of days must be an integer.")
+    else:
+        days = default_days
+
+    upcoming = book.get_upcoming_birthdays(days)
 
     if not upcoming:
-        return "No birthdays next week."
+        return f"No birthdays in the next {days} days."
 
     grouped = defaultdict(list)
     for item in upcoming:
@@ -216,3 +228,19 @@ def delete_note(args, book: NoteBook):
         raise ValueError("Note id must be an integer.")
     book.delete_note(note_id)
     return "Note deleted."
+
+
+@input_error
+def set_birthdays_days(args, assistant):
+    if len(args) < 1:
+        raise IndexError("Usage: set-birthdays-days [days]")
+    try:
+        days = int(args[0])
+        if days < 1:
+            raise ValueError("Number of days must be positive.")
+        assistant.birthdays_days = days
+        return f"Default number of days for birthdays set to {days}."
+    except ValueError as e:
+        if "positive" in str(e):
+            raise
+        raise ValueError("Number of days must be an integer.")
