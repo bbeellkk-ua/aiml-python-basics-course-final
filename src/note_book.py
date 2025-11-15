@@ -10,7 +10,9 @@ class Note:
 
     def __str__(self):
         if self.tags:
-            tags_str = ", ".join(t.value for t in sorted(self.tags, key=lambda t: t.value))
+            tags_str = ", ".join(
+                t.value for t in sorted(self.tags, key=lambda t: t.value)
+            )
             return f"[{self.id.value}] {self.text.value} (tags: {tags_str})"
         return f"[{self.id.value}] {self.text.value}"
 
@@ -50,7 +52,9 @@ class NoteBook:
         return list(self._notes)
 
     def find_note(self, note_id):
-        return next((note for note in self._notes if note.id.value == note_id), None)
+        return next(
+            (note for note in self._notes if note.id.value == note_id),
+            None)
 
     def edit_note(self, note_id: int, new_text: str):
         note = self.find_note(note_id)
@@ -87,7 +91,10 @@ class NoteBook:
     def sort_by_tags(self) -> List[Note]:
         def key(note: Note) -> tuple[str, int]:
             if not note.tags:
-                return "~", note.id.value # no tags - to end of list, ~ is the last ASCII symbol
+                return (
+                    "~",
+                    note.id.value,
+                )  # no tags - to end of list, ~ is the last ASCII symbol
             first_tag = min(t.value for t in note.tags)
             return first_tag, note.id.value
 

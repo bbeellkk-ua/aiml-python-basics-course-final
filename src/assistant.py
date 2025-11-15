@@ -24,7 +24,7 @@ from handlers import (
 )
 
 try:
-    import readline  # stdlib; provides tab-completion on Unix/macOS
+    import readline  # stdlib: tab-completion on Unix/macOS
 except Exception:
     readline = None
 
@@ -36,7 +36,8 @@ class Assistant:
         # Store state under ~/.bot
         self.state_dir = Path.home() / ".bot"
         self.state_dir.mkdir(parents=True, exist_ok=True)
-        # Always store state file inside ~/.bot, using the base name to avoid directory traversal
+        # Always store state file inside ~/.bot, using the base name to avoid
+        # directory traversal
         self.filename = Path(filename).name
         self.filepath = self.state_dir / self.filename
         self.address_book = None
@@ -47,9 +48,12 @@ class Assistant:
         try:
             with open(self.filepath, "rb") as f:
                 payload = pickle.load(f)
-                self.address_book = payload.get("address_book") or AddressBook()
+                self.address_book = payload.get(
+                    "address_book") or AddressBook()
                 self.note_book = payload.get("note_book") or NoteBook()
-                self.birthdays_days = payload.get("birthdays_days", self.DEFAULT_BIRTHDAYS_DAYS)
+                self.birthdays_days = payload.get(
+                    "birthdays_days", self.DEFAULT_BIRTHDAYS_DAYS
+                )
         except FileNotFoundError:
             self.address_book = AddressBook()
             self.note_book = NoteBook()
@@ -80,11 +84,13 @@ class Assistant:
             "      Greet the assistant.\n"
             "\n"
             "  add <name> <phone>\n"
-            "      Add a new contact or add a new phone number to an existing contact.\n"
+            "      Add a new contact or add a new phone number to an existing"
+            " contact.\n"
             "      Example: add John 1234567890\n"
             "\n"
             "  change <name> <old_phone> <new_phone>\n"
-            "      Replace an existing phone number with a new one for the contact.\n"
+            "      Replace an existing phone number with a new one for the"
+            " contact.\n"
             "      Example: change John 1234567890 555000111\n"
             "\n"
             "  phone <name>\n"
@@ -103,7 +109,8 @@ class Assistant:
             "      Example: show-birthday John\n"
             "\n"
             "  birthdays [days]\n"
-            "      Show which contacts have a birthday coming up in the next N days.\n"
+            "      Show which contacts have a birthday coming up in the next"
+            " N days.\n"
             "      If days is not specified, uses the configured default.\n"
             "      Example: birthdays 7\n"
             "      Example: birthdays (uses configured default)\n"
@@ -114,7 +121,8 @@ class Assistant:
             "\n"
             "  add-address <name> <address>\n"
             "      Add or update a contact's address.\n"
-            "      Example: add-birthday John US, CA, Los Angeles, Tarasa Shevchecnko, 10, 25\n"
+            "      Example: add-birthday John US, CA, Los Angeles,\n"
+            "      Tarasa Shevchecnko, 10, 25\n"
             "\n"
             "  show-address <name>\n"
             "      Show the birthday of a contact.\n"
@@ -149,13 +157,12 @@ class Assistant:
             "\n"
             "  sort-notes-by-tags\n"
             "      Show all notes sorted by tags (alphabetically).\n"
-            "\n"            
+            "\n"
             "  help\n"
             "      Show this help message.\n"
             "\n"
             "  exit | close\n"
-            "      Save data and exit the program.\n"
-        )
+            "      Save data and exit the program.\n")
 
     @staticmethod
     def invalid_input():
@@ -219,16 +226,22 @@ class Assistant:
             if not tokens or (len(tokens) == 0):
                 candidates = self._match_candidates(commands, text)
             else:
-                token_index = len(tokens) if is_new_token else max(len(tokens) - 1, 0)
+                token_index = len(tokens) if is_new_token else max(
+                    len(tokens) - 1, 0)
 
                 if token_index == 0:
                     # Completing the command name
-                    # Use the full first token as prefix to avoid delimiter issues (e.g., hyphen)
+                    # Use the full first token as prefix to avoid delimiter
+                    # issues (e.g., hyphen)
                     cmd_prefix = tokens[0] if not is_new_token else ""
                     candidates = self._match_candidates(commands, cmd_prefix)
-                elif tokens and tokens[0].lower() in name_first_cmds and token_index == 1:
+                elif (
+                    tokens and tokens[0].lower(
+                    ) in name_first_cmds and token_index == 1
+                ):
                     # Completing the first argument (contact name)
-                    names = list(self.address_book.data.keys()) if self.address_book else []
+                    names = (list(self.address_book.data.keys())
+                             if self.address_book else [])
                     candidates = self._match_candidates(names, text)
                 else:
                     candidates = []
