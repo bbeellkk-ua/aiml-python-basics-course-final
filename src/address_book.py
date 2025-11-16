@@ -65,6 +65,15 @@ class AddressBook(UserDict):
         else:
             raise KeyError("Contact not found.")
 
+    def rename(self, old_name: str, new_name: str):
+        if old_name not in self.data:
+            raise KeyError("Contact not found.")
+        if new_name in self.data:
+            raise ValueError("Contact with this name already exists.")
+        record = self.data.pop(old_name)
+        record.name = Name(new_name)
+        self.data[new_name] = record
+
     def get_upcoming_birthdays(self, days: int = 7):
         def clamp_to_month_end(year: int, month: int, day: int) -> date:
             last_day = calendar.monthrange(year, month)[1]

@@ -20,6 +20,8 @@ from handlers import (
     untag_note,
     find_notes,
     sort_notes_by_tags,
+    change_name,
+    contacts_markdown,
     set_birthdays_days,
 )
 
@@ -93,12 +95,19 @@ class Assistant:
             " contact.\n"
             "      Example: change John 1234567890 555000111\n"
             "\n"
+            "  change-name <old_name> <new_name>\n"
+            "      Rename a contact.\n"
+            "      Example: change-name John Jonathan\n"
+            "\n"
             "  phone <name>\n"
             "      Show all phone numbers for a contact.\n"
             "      Example: phone John\n"
             "\n"
             "  all\n"
             "      Show all contacts with their phone numbers and birthdays.\n"
+            "\n"
+            "  contacts-markdown\n"
+            "      Show all contacts as a Markdown table (Name, Phones, Birthday, Address).\n"
             "\n"
             "  add-birthday <name> <DD.MM.YYYY>\n"
             "      Add or update a contact's birthday.\n"
@@ -184,8 +193,10 @@ class Assistant:
             "hello",
             "add",
             "change",
+            "change-name",
             "phone",
             "all",
+            "contacts-markdown",
             "add-birthday",
             "show-birthday",
             "birthdays",
@@ -206,6 +217,7 @@ class Assistant:
         name_first_cmds = {
             "add",
             "change",
+            "change-name",
             "phone",
             "add-birthday",
             "show-birthday",
@@ -303,11 +315,17 @@ class Assistant:
             elif command == "change":
                 print(change_phone(args, self.address_book))
 
+            elif command == "change-name":
+                print(change_name(args, self.address_book))
+
             elif command == "phone":
                 print(show_phone(args, self.address_book))
 
             elif command == "all":
                 print(show_all(self.address_book))
+
+            elif command == "contacts-markdown":
+                print(contacts_markdown(self.address_book))
 
             elif command == "add-birthday":
                 print(add_birthday(args, self.address_book))

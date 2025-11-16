@@ -79,6 +79,85 @@ def change_phone(args, book: AddressBook):
 
 
 @input_error
+def change_name(args, book: AddressBook):
+    if len(args) < 2:
+        raise IndexError("Usage: change-name [old_name] [new_name]")
+    old_name, new_name, *_ = args
+    if old_name == new_name:
+        raise ValueError("New name must be different.")
+    book.rename(old_name, new_name)
+    return "Contact renamed."
+
+
+@input_error
+def contacts_markdown(book: AddressBook):
+    if not book.data:
+        return "No contacts found."
+
+    records = sorted(book.values(), key=lambda r: r.name.value.lower())
+
+    def _esc(s: str) -> str:
+        return s.replace("|", "\\|")
+
+    # Build escaped rows
+    rows = []
+    for r in records:
+        name = _esc(r.name.value)
+        phones = _esc(", ".join(p.value for p in r.phones) if r.phones else "")
+        birthday = _esc(str(r.birthday) if r.birthday else "")
+        address = _esc(str(r.address) if r.address else "")
+        rows.append([name, phones, birthday, address])
+
+    headers = ["Name", "Phones", "Birthday", "Address"]
+
+    # Calculate max widths per column (including headers)
+    col_widths = [len(h) for h in headers]
+    for row in rows:
+        for i, cell in enumerate(row):
+            if len(cell) > col_widths[i]:
+                col_widths[i] = len(cell)
+
+    # Build header row with padding
+    header_row = "| " + " | ".join(h.ljust(col_widths[i]) for i, h in enumerate(headers)) + " |"
+
+    # Build alignment/separator row (left, left, center, left)
+    def _align(width, align="left"):
+        # produce markdown alignment marker matching width
+        if width < 3:
+            width = 3
+        if align == "center":
+            return ":" + "-" * (width - 2) + ":"
+        elif align == "right":
+            return "-" * (width - 1) + ":"
+        else:
+            return ":" + "-" * (width - 1)  # left
+
+    alignments = ["left", "left", "center", "left"]
+    separator_row = "| " + " | ".join(_align(col_widths[i], alignments[i]) for i in range(len(col_widths))) + " |"
+
+    # Build data rows with padding (center birthday for readability)
+    def _pad(cell, width, align="left"):
+        if align == "center":
+            total = width - len(cell)
+            left = total // 2
+            right = total - left
+            return " " * left + cell + " " * right
+        elif align == "right":
+            return cell.rjust(width)
+        else:
+            return cell.ljust(width)
+
+    lines = [header_row, separator_row]
+    for row in rows:
+        padded = []
+        for i, cell in enumerate(row):
+            padded.append(_pad(cell, col_widths[i], alignments[i]))
+        lines.append("| " + " | ".join(padded) + " |")
+
+    return "\n".join(lines)
+
+
+@input_error
 def show_all(book: AddressBook):
     if not book.data:
         return "No contacts found."
