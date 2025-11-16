@@ -81,7 +81,7 @@ def change_phone(args, book: AddressBook):
 @input_error
 def change_name(args, book: AddressBook):
     if len(args) < 2:
-        raise IndexError("Usage: change-name [old_name] [new_name]")
+        raise IndexError("Usage: rename [old_name] [new_name]")
     old_name, new_name, *_ = args
     if old_name == new_name:
         raise ValueError("New name must be different.")
@@ -90,7 +90,7 @@ def change_name(args, book: AddressBook):
 
 
 @input_error
-def contacts_markdown(book: AddressBook):
+def show_all(book: AddressBook):
     if not book.data:
         return "No contacts found."
 
@@ -155,14 +155,6 @@ def contacts_markdown(book: AddressBook):
         lines.append("| " + " | ".join(padded) + " |")
 
     return "\n".join(lines)
-
-
-@input_error
-def show_all(book: AddressBook):
-    if not book.data:
-        return "No contacts found."
-
-    return "\n".join(str(record) for record in book.values())
 
 
 @input_error
