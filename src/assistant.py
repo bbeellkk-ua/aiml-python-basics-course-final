@@ -20,7 +20,7 @@ from handlers import (
     untag_note,
     find_notes,
     sort_notes_by_tags,
-    change_name,
+    rename,
     set_birthdays_days,
 )
 
@@ -311,7 +311,7 @@ class Assistant:
                 print(change_phone(args, self.address_book))
 
             elif command == "rename":
-                print(change_name(args, self.address_book))
+                print(rename(args, self.address_book))
 
             elif command == "phone":
                 print(show_phone(args, self.address_book))

@@ -79,7 +79,7 @@ def change_phone(args, book: AddressBook):
 
 
 @input_error
-def change_name(args, book: AddressBook):
+def rename(args, book: AddressBook):
     if len(args) < 2:
         raise IndexError("Usage: rename [old_name] [new_name]")
     old_name, new_name, *_ = args
