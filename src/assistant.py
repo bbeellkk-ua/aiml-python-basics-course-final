@@ -20,6 +20,7 @@ from handlers import (
     untag_note,
     find_notes,
     sort_notes_by_tags,
+    rename,
     set_birthdays_days,
 )
 
@@ -92,6 +93,10 @@ class Assistant:
             "      Replace an existing phone number with a new one for the"
             " contact.\n"
             "      Example: change John 1234567890 555000111\n"
+            "\n"
+            "  rename <old_name> <new_name>\n"
+            "      Rename a contact.\n"
+            "      Example: rename John Jonathan\n"
             "\n"
             "  phone <name>\n"
             "      Show all phone numbers for a contact.\n"
@@ -184,6 +189,7 @@ class Assistant:
             "hello",
             "add",
             "change",
+            "rename",
             "phone",
             "all",
             "add-birthday",
@@ -206,6 +212,7 @@ class Assistant:
         name_first_cmds = {
             "add",
             "change",
+            "rename",
             "phone",
             "add-birthday",
             "show-birthday",
@@ -302,6 +309,9 @@ class Assistant:
 
             elif command == "change":
                 print(change_phone(args, self.address_book))
+
+            elif command == "rename":
+                print(rename(args, self.address_book))
 
             elif command == "phone":
                 print(show_phone(args, self.address_book))
